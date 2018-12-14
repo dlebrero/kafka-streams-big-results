@@ -53,7 +53,6 @@
     (POST "/big-file" req
       (let [{:strs [lines size] :or {lines "100"
                                      size "1000"}} (:params req)]
-        (println (:params req) "adf,dlas;f,asdlf;,ads")
         (generate-big-file (Integer/parseInt lines) (Integer/parseInt size))
         {:status 200
          :body (pr-str "done!")}))))
