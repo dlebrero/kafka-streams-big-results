@@ -46,7 +46,7 @@
     (doseq [line-number random-order-items]
       (when (= line-number when-to-send-total)
         (send-command file-id {:total-lines num-lines-in-file}))
-      (send-command file-id {:line-number line-number :result (rand-str result-size)}))))
+      (send-command file-id {:line-number line-number :partial-result (rand-str result-size)}))))
 
 (def api
   (routes
