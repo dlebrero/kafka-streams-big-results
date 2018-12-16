@@ -95,12 +95,12 @@
     (.put store file-id {:total-lines total-lines :so-far so-far})
     (check-if-all-results-received store file-id so-far total-lines)))
 
-(defn line-processed [store file-id {:keys [line-number result]}]
+(defn line-processed [store file-id {:keys [line-number partial-result]}]
   (let [{:keys [total-lines so-far]} (get-so-far store file-id)
         records-so-far (inc so-far)]
     (if (zero? (mod records-so-far 100))
       (log/info "so-far:" records-so-far))
-    (.put store (line-key file-id line-number) result)
+    (.put store (line-key file-id line-number) partial-result)
     (.put store file-id {:total-lines total-lines :so-far records-so-far})
     (check-if-all-results-received store file-id records-so-far total-lines)))
 
