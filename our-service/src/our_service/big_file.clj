@@ -75,15 +75,17 @@
 
 (defn check-if-all-results-received [store file-id records-so-far total-lines]
   (when (= records-so-far total-lines)
-    (log/info "Writing file " file-id)
-    (with-open [all-records (.range store (line-key file-id 0) (line-key file-id Long/MAX_VALUE))
+    (log/info "Writing file " file-id "total records" total-lines)
+    (with-open [all-records (.range store (line-key file-id 0) (line-key file-id total-lines))
                 writer (io/writer file-id)]
       (doseq [^KeyValue record (iterator-seq all-records)]
         (.write writer (str (.key record) "->" (.value record) "\n"))))
     (log/info "deleting")
-    (with-open [all-records (.range store (line-key file-id 0) (line-key file-id Long/MAX_VALUE))]
-      (doseq [record-batch (partition-all 1000 (iterator-seq all-records))]
-        (.putAll store (mapv (fn [record] (KeyValue. (.key record) nil)) record-batch))))
+    (let [all-keys (map
+                     (fn [i] (KeyValue. (line-key file-id i) nil))
+                     (range 1 (inc total-lines)))]
+      (doseq [keys-batch (partition-all 1000 all-keys)]
+        (.putAll store keys-batch)))
     (.delete store file-id)
     {:finish file-id}))
 
