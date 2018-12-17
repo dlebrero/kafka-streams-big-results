@@ -1,6 +1,6 @@
 # Kafka Streams and KTables examples
 
-This code is the companion of the blog post [Kafka ](http://danlebrero.com/)
+This code is the companion of the blog post [Kafka ](http://danlebrero.com/2018/12/17/big-results-in-kafka-streams-range-query-rocksdb/)
 
 This project uses Docker to create a cluster of 3 microservices that consume from a Kafka topic using the
 Kafka Streams API.
